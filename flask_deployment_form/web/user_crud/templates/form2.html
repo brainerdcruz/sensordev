@@ -1,0 +1,108 @@
+<doctype html>
+<head>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script>
+	<script type="text/javascript">// <![CDATA[
+			function loading(){
+				$("#loading").show();
+				$("#content").hide();       
+			}
+
+			  $(document).ready(function() {
+				$("form").validate({					
+					rules: {
+						}
+					});
+				$("#num").on("change", function() {
+					var count = this.value; 
+					$('.node div').empty();
+					var i;
+					for(i = 1; i <= count; i++) {
+						var y = document.createElement("INPUT");
+						y.setAttribute("type", "number");
+						y.setAttribute("Placeholder", "node_" + i);
+						y.setAttribute("Name", "id");
+						y.setAttribute("Maxlength", "4");
+						document.getElementById("item0").appendChild(y);
+						document.getElementById("item0").appendChild(document.createElement("br"));
+					}
+				})
+			  })
+	// ]]>
+	</script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Add icon library -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+	
+</head>
+
+<body>
+	
+	<title>Deployment Form - Python Flask MySQL</title>
+	
+	<div id="loading"></div>
+
+	<div id="content">
+		<a href="{{ url_for('.home') }}"><button class="btn"><i class="fa fa-home"></i> Home</button></a>
+		<a href="{{ url_for('.view_status') }}"><button class="btn"><i class="fa fa-bars"></i> Status</button></a>
+		<a href="{{ url_for('.deployment_form') }}"><button class="btn"><i class="fa fa-plus"></i> Deployment Form</button></a>
+		
+		<h1>Deployment Form for TSM Sensor</h1>
+		<form method="post" action="/addtsm">
+			<dl>
+		  
+		  <p>
+		  <h2>TSM name</h2>
+		   <input name="input_tsm_name" value="{{logger_name}}" type="text" placeholder="tsm_name" autocomplete="off" maxlength = "5" required>
+		  </p>
+		  
+		  <p>
+		  <h2>Logger id</h2>
+		   <input name="input_logger_id" value="{{logger_id}}" type="number" placeholder="logger_id" autocomplete="off" required>
+		  </p>
+		  
+		  <p>
+		  <h2>Site id</h2>
+		   <input name="input_site_id" value="{{site_id}}" type="number" placeholder="site_id" autocomplete="off" required>
+		  </p>
+
+		  <p>
+		  <h2>Date Activated</h2>
+		   <input name="input_date_activated" value="{{date_activated}}" type="date" placeholder="date_activated" autocomplete="off" required>
+		  </p>
+		  
+		  <p>
+		  <h2>Segment Length</h2>
+		   <input name="input_segment_length" value="" type="number" placeholder="segment_length" autocomplete="off">
+		  </p>
+		  
+		  <p>
+		  <h2>Number of Segment</h2>
+		   <input id = "num" name="input_number_of_segments" value="" type="number" placeholder="number_of_segments" autocomplete="off" maxlength = "2" max = "40" required>
+		  </p>
+		  
+		  <p>
+		  <h2>Version</h2>
+		   <input name="input_version" value="" type="number" placeholder="version" autocomplete="off" maxlength = "1" required>
+		  </p>
+		  
+		  <p id = myForm>
+		  <h2>ID</h2>
+
+			  <div class = "node">
+				<div id = "item0" >
+				</div>
+			  </div>
+		  </p>
+		  
+		 	  
+			</dl>
+			<p>
+		  <input type="submit" value="Submit" class = "button" onclick = 'loading();'>
+		 </p>
+		</form>
+	</div>
+</body>

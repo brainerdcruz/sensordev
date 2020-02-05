@@ -1,0 +1,91 @@
+tsm_id,tsm_name,raw_status,filter_status,volt_status
+1,agbsb,Ok,to tag accelerometers,Ok
+2,agbta,Not Ok,no data,no data
+3,bakta,Not Ok,no data,no data
+4,baktb,Not Ok,to tag accelerometers,no data
+5,baktc,Not Ok,no data,no data
+6,banta,Ok,Ok,Ok
+7,bantb,Ok,Ok,Ok
+8,barsc,Ok,Ok,Ok
+9,barta,Ok,Ok,Ok
+10,bartb,Ok,Ok,Ok
+11,baysb,Not Ok,no data,no data
+12,bayta,Not Ok,no data,no data
+13,baytc,Not Ok,no data,no data
+16,blcsb,Ok,to tag accelerometers,Ok
+118,blcta,Not Ok,no data,no data
+124,bolta,Ok,Ok,Ok
+19,btota,Not Ok,no data,no data
+20,btotb,Not Ok,no data,no data
+23,cudta,Not Ok,no data,no data
+24,cudtb,Ok,to tag accelerometers,Ok
+25,dadta,Not Ok,no data,no data
+26,dadtb,Not Ok,no data,no data
+27,gaasa,Not Ok,to tag accelerometers,Ok
+121,gaatc,Ok,to tag accelerometers,Ok
+29,gamb,Ok,Not Ok,Ok
+31,hinsa,Ok,Ok,Ok
+32,hinsb,Ok,Ok,Ok
+33,humb,Not Ok,to tag accelerometers,no data
+34,humt,Not Ok,to tag accelerometers,no data
+35,imesb,Not Ok,to tag accelerometers,Ok
+36,imeta,Ok,Ok,Ok
+38,imuta,Not Ok,no data,no data
+120,imutd,Not Ok,to tag accelerometers,Ok
+40,inata,Ok,to tag accelerometers,Ok
+41,inatb,Not Ok,to tag accelerometers,no data
+42,inatc,Not Ok,no data,no data
+43,jorta,Not Ok,Ok,Ok
+44,labb,Not Ok,no data,no data
+45,labt,Ok,to tag accelerometers,Ok
+46,laysa,Ok,to tag accelerometers,Ok
+47,laysb,Ok,to tag accelerometers,Ok
+48,lipb,Not Ok,to tag accelerometers,Ok
+49,lipt,Not Ok,to tag accelerometers,Ok
+50,loota,Ok,to tag accelerometers,Ok
+51,lootb,Not Ok,to tag accelerometers,Ok
+52,lpasa,Ok,Ok,Ok
+53,lpasb,Ok,to tag accelerometers,Ok
+54,ltesa,Not Ok,Ok,Ok
+55,ltetb,Not Ok,to tag accelerometers,Ok
+58,luntc,Not Ok,to tag accelerometers,no data
+59,luntd,Not Ok,to tag accelerometers,no data
+60,magta,Not Ok,no data,no data
+61,magtb,Not Ok,to tag accelerometers,no data
+66,mamta,Ok,to tag accelerometers,Ok
+67,mamtb,Not Ok,no data,no data
+68,marta,Not Ok,no data,no data
+69,martb,Not Ok,to tag accelerometers,no data
+70,mcasb,Not Ok,to tag accelerometers,Ok
+71,mcata,Not Ok,no data,no data
+73,mesta,Not Ok,no data,no data
+74,mngsa,Ok,Ok,Ok
+75,mngtb,Ok,Ok,Ok
+76,mslta,Not Ok,no data,no data
+77,msuta,Not Ok,no data,no data
+78,nagsa,Not Ok,no data,no data
+79,nagtb,Not Ok,to tag accelerometers,no data
+80,nurta,Ok,to tag accelerometers,Ok
+81,nurtb,Ok,Ok,Ok
+82,oslb,Not Ok,to tag accelerometers,no data
+85,parta,Ok,Ok,Ok
+86,partb,Ok,Ok,Ok
+119,pepsb,Not Ok,no data,no data
+89,peptc,Not Ok,no data,no data
+91,plab,Not Ok,to tag accelerometers,no data
+93,pngta,Ok,to tag accelerometers,Ok
+94,pngtb,Ok,to tag accelerometers,Ok
+95,pngtc,Not Ok,no data,no data
+98,sagta,Not Ok,to tag accelerometers,Ok
+99,sagtb,Not Ok,to tag accelerometers,Ok
+100,sibta,Not Ok,no data,no data
+103,sinsa,Not Ok,Ok,Ok
+105,sintb,Ok,Ok,Ok
+107,sumta,Not Ok,no data,no data
+109,sumtc,Ok,Ok,Ok
+111,taltb,Ok,Ok,Ok
+112,tgata,Not Ok,Ok,Ok
+113,tgatb,Not Ok,Ok,Ok
+115,tueta,Ok,Ok,Ok
+116,tuetb,Not Ok,to tag accelerometers,Ok
+117,umita,Not Ok,to tag accelerometers,no data

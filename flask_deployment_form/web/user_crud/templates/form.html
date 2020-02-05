@@ -1,0 +1,143 @@
+<doctype html>
+<head>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script>	
+	
+	<script type="text/javascript">// <![CDATA[
+			function loading(){
+				$("#loading").show();
+				$("#content").hide();       
+			}
+			$(document).ready(function(){
+				$("form").validate({
+					rules: {
+					
+						}
+					message:{
+					}
+					}
+				});
+			});
+	// ]]>
+	</script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Add icon library -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+	
+</head>
+
+<body>
+	
+	<title>Deployment Form - Python Flask MySQL</title>
+	
+	<div id="loading"></div>
+
+	<div id="content">
+		
+		<a href="{{ url_for('.home') }}"><button class="btn"><i class="fa fa-home"></i> Home</button></a>
+		<a href="{{ url_for('.view_status') }}"><button class="btn"><i class="fa fa-bars"></i> Status</button></a>
+		<a href="{{ url_for('.deployment_form') }}"><button class="btn"><i class="fa fa-plus"></i> Deployment Form</button></a>
+		
+		<h1>Deployment Form</h1>
+		<form method="post" action="/add">
+			<dl>
+		  <p>
+		  <h2>Site Code</h2>
+		   <span class="input-group-addon"></span>
+			<select name="input_site" class="selectpicker form-control" required>
+			  <option value="" selected disabled>Select Site</option>
+			  {% for s in site %}
+			  <option value="{{ s.site_id }}">{{ s.site_code }}</option>
+			  {% endfor %}
+			</select>
+		  </p>
+		  
+		  <p>
+		  <h2>Logger_name</h2>
+		   <input name="input_logger_name" value="" type="text" placeholder="logger_name" autocomplete="off" minlength="4" maxlength = "5" required>
+		  </p>
+		  
+		  <p>
+		  <h2>Date Installed</h2>
+		   <input name="input_date_installed" value="" type="date" placeholder="date_identified" autocomplete="off" required>
+		  </p>
+
+		  <p>
+		  <h2>Date Activated</h2>
+		   <input name="input_date_activated" value="" type="date" placeholder="date_activated" autocomplete="off" required>
+		  </p>
+		  
+		  <p>
+		  <h2>Location Description</h2>
+		   <input name="input_location" value="" type="text" placeholder="location_description" autocomplete="off" size = "48">
+		  </p>
+		  
+		  <p>
+		  <h2>latitude</h2>
+		   <input name="input_latitude" value="" type="text" placeholder="latitude" autocomplete="off">
+		  </p>
+		  
+		  <p>
+		  <h2>longitude</h2>
+		   <input name="input_longitude" value="" type="text" placeholder="longitude" autocomplete="off">
+		  </p>
+		  
+		  <p>
+		  <h2>Network</h2>
+		  <span class="input-group-addon"></span>
+			<select name="input_network" class="selectpicker form-control">
+			  <option value="" selected disabled>Select Network</option>
+			  {% for n in network %}
+			  <option value="{{ n.network }}">{{ n.network }}</option>
+			  {% endfor %}
+			</select>
+		  </p>
+
+		  <p>
+		  <h2>Mobile Number</h2>
+		   <input name="input_mobile" value="" type="number" placeholder="(ex.639123456789)" autocomplete="off" minlength = "12" maxlength = "12" required>
+		  </p>		
+		  
+		  <p>
+		  <h2>Logger Type</h2>
+		  <span class="input-group-addon"></span>
+			<select name="input_logger" class="selectpicker form-control">
+			  <option value="" selected disabled>Select Logger</option>
+			  {% for i in logger_type %}
+			  <option value="{{ i.logger }}">{{ i.logger }}</option>
+			  {% endfor %}
+			</select><br>
+			
+		  <input type="checkbox" name="has_tilt" value="1"/> has tilt<br>
+		  <input type="checkbox" name="has_rain" value="1"/> has rain<br>
+		  <input type="checkbox" name="has_piezo" value="1"/> has piezo<br>
+		  <input type="checkbox" name="has_soms" value="1"> has soms<br>
+		  </p>
+		  
+		  <p>
+		  <h2>Personnels (ctr+click)</h2>
+		  <span class="input-group-addon"></span>
+		   <select name="input_personnels" class="selectpicker form-control" multiple required>
+			  <option value="" selected disabled>Select Personnels</option>
+			  <option value="Brain">Brain</option>
+			  <option value="Kate">Kate</option>
+			  <option value="Sky">Sky</option>
+			  <option value="Jec">Jec</option>
+			  <option value="Kennex">Kennex</option>
+			  <option value="Reyn">Reyn</option>
+			  <option value="Web">Web</option>
+			  <option value="Oscar">Oscar</option>
+			  <option value="Arnel">Arnel</option>
+			  <option value="Troy">Troy</option>
+			  </select>
+		  </p>
+		  
+			</dl>
+			<p>
+		  <input type="submit" value="Submit" class = "button" onclick = 'loading();'>
+		 </p>
+		</form>
+	</div>
+</body>
