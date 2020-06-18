@@ -6,6 +6,7 @@ class Results(Table):
     raw_status = Col('Raw Status')
     filter_status = Col('Filter Status')
     volt_status = Col('Volt Status')
+    sms_msg = Col('SMS Status')
     show = LinkCol('Show', 'show', url_kwargs=dict(name ='tsm_name'))
     
 class all_data(Table):

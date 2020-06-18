@@ -97,6 +97,23 @@ def main():
         engine=create_engine('mysql+pymysql://root:senslope@192.168.150.77:3306/senslopedb', echo = False)
         dft.to_sql(name = 'data_counter', con = engine, if_exists = 'append', index = False)
         dffc = pd.concat([dffc,dft], ignore_index = True)
+
+    query = ("SELECT l.logger_id, sms_msg FROM mia_comms_db.smsinbox_loggers "
+             "inner join (SELECT mobile_id,logger_id from mia_comms_db.logger_mobile) as lm "
+             "on lm.mobile_id = smsinbox_loggers.mobile_id "
+             "inner join (SELECT logger_name, logger_id from mia_senslopedb.loggers) as l "
+             "on lm.logger_id = l.logger_id "
+             "where inbox_id >= (SELECT max(inbox_id)-10000 FROM mia_comms_db.smsinbox_loggers) "
+             "and sms_msg like '%no %' or sms_msg like 'pow%' "
+             "and ts_sms >= DATE_SUB(Now(), interval 1 DAY) "
+             "group by l.logger_id")
+    sms_stat = qdb.get_db_dataframe(query)
+    
+    sms_summary = pd.merge(tsm_sensors[['tsm_id','tsm_name','logger_id']], sms_stat, how = 'left', on = 'logger_id')
+    print (sms_summary)
+    engine=create_engine('mysql+pymysql://root:senslope@192.168.150.77:3306/senslopedb', echo = False)
+    sms_summary[['tsm_id','sms_msg']].to_sql(name = 'tsm_sms_stat', con = engine, if_exists = 'replace', index = False)
+    
     
 if __name__ == "__main__":
     main()

@@ -24,6 +24,12 @@ def evaluate():
     conn = mysql.connect()
     df_count = pd.read_sql(query, con=conn)
     
+    query_sms_stat = "SELECT * FROM tsm_sms_stat"
+    #df_count = qdb.get_db_dataframe(query)
+#    engine=create_engine('mysql+pymysql://root:senslope@192.168.150.77:3306/senslopedb', echo = False)
+    conn = mysql.connect()
+    df_sms = pd.read_sql(query_sms_stat, con=conn)
+
     query_stat = ("Select accel_id, status, remarks from "
                   "(SELECT max(stat_id) as 'latest_stat_id' FROM "
                   "accelerometer_status group by accel_id) as stat "
@@ -117,4 +123,6 @@ def evaluate():
     
     df_summary = pd.merge(df_raw[['tsm_id', 'tsm_name','raw_status']],df_filter[['tsm_id', 'tsm_name','filter_status']], how = 'inner', on = ['tsm_id','tsm_name'])
     df_summary = pd.merge(df_summary,df_volt[['tsm_id', 'tsm_name','volt_status']], how = 'inner', on = ['tsm_id','tsm_name'])
+    df_summary = pd.merge(df_summary,df_sms, how = 'left', on = 'tsm_id')
     return df_summary, df_count, df_raw, df_filter,df_volt
+
