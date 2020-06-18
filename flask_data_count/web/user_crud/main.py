@@ -95,7 +95,7 @@ def users():
         #get latest ts
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT max(ts) as tsupdate FROM senslopedb.data_counter ")
+        cursor.execute("SELECT max(ts) as tsupdate FROM data_counter ")
         ts = cursor.fetchone()
         
         
@@ -149,7 +149,7 @@ def show(name):
     
     conn = mysql.connect()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("SELECT max(ts) as tsupdate FROM senslopedb.data_counter ")
+    cursor.execute("SELECT max(ts) as tsupdate FROM data_counter ")
     ts = cursor.fetchone()
     
     return render_template(
@@ -183,7 +183,7 @@ def view_status():
                        "node_id, accel_number, ts_flag, date_identified, status, "
                        "IF(status=1,'Ok', IF(status=2,'Use with Caution', "
                        "IF(status=3,'Special Case', IF(status=4,'Not Ok', NULL)))) "
-                       "as accel_status, remarks FROM senslopedb.accelerometer_status "
+                       "as accel_status, remarks FROM accelerometer_status "
                        "inner join accelerometers on "
                        "accelerometer_status.accel_id = accelerometers.accel_id "
                        "inner join tsm_sensors on accelerometers.tsm_id = tsm_sensors.tsm_id "
@@ -244,10 +244,10 @@ def update_in_use_view():
         try:
     #        conn = mysql.connect()
     #        cursor = conn.cursor(pymysql.cursors.DictCursor)
-            query = ("SELECT * FROM senslopedb.accelerometers "
-                     "where tsm_id = (select tsm_id FROM senslopedb.accelerometers "
+            query = ("SELECT * FROM accelerometers "
+                     "where tsm_id = (select tsm_id FROM accelerometers "
                      "where accel_id = {}) "
-                     "and node_id = (select node_id FROM senslopedb.accelerometers "
+                     "and node_id = (select node_id FROM accelerometers "
                      "where accel_id = {})".format(id,id))
     #        row = cursor.fetchone()
             row = qdb.get_db_dataframe(query)
@@ -320,7 +320,7 @@ def update_in_use():
 #        stat_id = request.form['id']
         # validate the received values
         if tsm_id and request.method == 'POST':
-            query = ("SELECT * FROM senslopedb.accelerometers "
+            query = ("SELECT * FROM accelerometers "
                      "where tsm_id = '{}' and node_id = '{}'".format(tsm_id,node_id))
             accel = qdb.get_db_dataframe(query)
             
@@ -331,7 +331,7 @@ def update_in_use():
                 else:
                     in_use = 0
                 
-                update_query = ("UPDATE `senslopedb`.`accelerometers` "
+                update_query = ("UPDATE `accelerometers` "
                                 "SET `in_use`='{}', `ts_updated` = NOW() WHERE `tsm_id`='{}' and "
                                 "`node_id`='{}' and `accel_number` = '{}';".format(in_use, tsm_id, node_id, i))
                 qdb.execute_query(update_query)
@@ -374,6 +374,10 @@ def delete_status(id):
 #        conn.close()
   
 if __name__ == "__main__":
-    ip = socket.gethostbyname(socket.gethostname())
-    socketio.run(app, host= 'localhost', port=5000)
+#    ip = socket.gethostbyname(socket.gethostname())
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    print(ip)
+    socketio.run(app, host= ip, port=5000)
     app.run(debug=True)

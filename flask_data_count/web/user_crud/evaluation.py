@@ -10,6 +10,7 @@ import analysis.querydb as qdb
 from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
+from db_config import mysql
 
 def evaluate():
     memc = memcache.Client(['127.0.0.1:11211'], debug=1)
@@ -17,14 +18,15 @@ def evaluate():
     tsm_sensors = memc.get('DF_TSM_SENSORS')
     tsm_sensors = tsm_sensors[pd.isnull(tsm_sensors.date_deactivated)]
     
-    query = "SELECT * FROM senslopedb.data_counter where ts = (SELECT max(ts) FROM senslopedb.data_counter)"
+    query = "SELECT * FROM data_counter where ts = (SELECT max(ts) FROM data_counter)"
     #df_count = qdb.get_db_dataframe(query)
-    engine=create_engine('mysql+pymysql://root:senslope@192.168.150.77:3306/senslopedb', echo = False)
-    df_count = pd.read_sql(query, con=engine)
+#    engine=create_engine('mysql+pymysql://root:senslope@192.168.150.77:3306/senslopedb', echo = False)
+    conn = mysql.connect()
+    df_count = pd.read_sql(query, con=conn)
     
     query_stat = ("Select accel_id, status, remarks from "
                   "(SELECT max(stat_id) as 'latest_stat_id' FROM "
-                  "senslopedb.accelerometer_status group by accel_id) as stat "
+                  "accelerometer_status group by accel_id) as stat "
                   "inner join accelerometer_status on latest_stat_id = stat_id")
     dfstat = qdb.get_db_dataframe(query_stat)
     #engine=create_engine('mysql+mysqlconnector://root:senslope@192.168.150.75:3306/senslopedb', echo = False)
@@ -57,7 +59,7 @@ def evaluate():
     df_count['good_outlier'][df_count.percent_outlierf/df_count.percent_orthof * 100.0<80]=0
     
     query_validity = ("SELECT tsm_id,node_id, COUNT(IF(na_status=1,1, NULL))/count(ts)*100.0 "
-                      "as 'percent_valid' FROM senslopedb.node_alerts group by tsm_id, node_id")
+                      "as 'percent_valid' FROM node_alerts group by tsm_id, node_id")
     df_validity = qdb.get_db_dataframe(query_validity)
     df_validity = pd.merge(accelerometers[['tsm_id','accel_id','node_id']], df_validity, how = 'outer', on = ['tsm_id','node_id'])
     df_validity = df_validity.drop(['tsm_id','node_id'],axis=1) 
