@@ -42,7 +42,7 @@ def add_status_view():
 
 @app.route('/form')
 def deployment_form():
-    query = "SELECT site_id, site_code FROM senslopedb.sites order by site_code asc"
+    query = "SELECT site_id, site_code FROM sites order by site_code asc"
     site = qdb.get_db_dataframe(query)
     site = site.to_dict('r')
     return render_template('form.html',
@@ -53,7 +53,7 @@ def deployment_form():
   
 @app.route('/addtsm', methods=['POST'])
 def tsmsensor_form():
-    tsm_name = request.form['input_tsm_name']
+    tsm_name = request.form['input_tsm_name'].lower()
     logger_id = request.form['input_logger_id']
     site_id = request.form['input_site_id']
     date_activated = request.form['input_date_activated']
@@ -306,7 +306,7 @@ def home():
 #        conn = mysql.connect()
 #        cursor = conn.cursor(pymysql.cursors.DictCursor)
 #        cursor.execute
-        query = ("SELECT * FROM senslopedb.deployment_logs "
+        query = ("SELECT * FROM deployment_logs "
                        "inner join loggers on loggers.logger_id = deployment_logs.logger_id "
                        "#inner join tsm_sensors on tsm_sensors.logger_id = deployment_logs.logger_id")
 #        summary = cursor.fetchall()
@@ -389,7 +389,7 @@ def view_status():
                        "node_id, accel_number, ts_flag, date_identified, status, "
                        "IF(status=1,'Ok', IF(status=2,'Use with Caution', "
                        "IF(status=3,'Special Case', IF(status=4,'Not Ok', NULL)))) "
-                       "as accel_status, remarks FROM senslopedb.accelerometer_status "
+                       "as accel_status, remarks FROM accelerometer_status "
                        "inner join accelerometers on "
                        "accelerometer_status.accel_id = accelerometers.accel_id "
                        "inner join tsm_sensors on accelerometers.tsm_id = tsm_sensors.tsm_id "
@@ -488,5 +488,6 @@ if __name__ == "__main__":
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip = s.getsockname()[0]
+    print(ip)
     socketio.run(app, host= ip, port=3000)
     app.run(debug=True)
