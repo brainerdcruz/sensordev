@@ -106,8 +106,9 @@ def main():
              "where inbox_id >= (SELECT max(inbox_id)-10000 FROM mia_comms_db.smsinbox_loggers) "
              "and sms_msg like '%no %' or sms_msg like 'pow%' "
              "and ts_sms >= DATE_SUB(Now(), interval 1 DAY) "
-             "group by l.logger_id")
+             "#group by l.logger_id")
     sms_stat = qdb.get_db_dataframe(query)
+    sms_stat = sms_stat.groupby(['logger_id']).first().reset_index()
     
     sms_summary = pd.merge(tsm_sensors[['tsm_id','tsm_name','logger_id']], sms_stat, how = 'left', on = 'logger_id')
     print (sms_summary)
