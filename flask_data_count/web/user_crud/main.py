@@ -1,12 +1,13 @@
 import pymysql
 #from app import app
-from tables import Results, all_data, raw_data, filter_data, volt_data, status
+from tables import Results, all_data, raw_data, filter_data, volt_data, status, loggers
 from db_config import mysql
 from flask import Flask, flash, render_template, request, redirect, send_from_directory
 from flask_socketio import SocketIO
 from werkzeug import generate_password_hash, check_password_hash
 import socket
 import evaluation
+import eval_loggers
 import pandas as pd
 import filtercounter as fc
 import memcache
@@ -14,6 +15,7 @@ import os
 import time
 import analysis.querydb as qdb
 import volatile.init as init
+import dynadb.db as db
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
@@ -74,7 +76,9 @@ def add_status():
 #            cursor = conn.cursor()
 #            cursor.execute(sql, data)
 #            conn.commit()
-            qdb.execute_query(sql)
+#            qdb.execute_query(sql)
+            db.write(sql,connection = 'analysis')
+            
             flash('Status added successfully!')
             return redirect('/')
         else:
@@ -103,13 +107,36 @@ def users():
         summary = df_summary.to_dict('r')
         table = Results(summary)
         table.border = True
-        return render_template('summary.html', table=table, tsupdate = ts['tsupdate'])#rows.to_html(index=False))
+        return render_template('summary.html', table=table, tsupdate = ts['tsupdate'], title = "Sensors")#rows.to_html(index=False))
     except Exception as e:
         print(e)
 #    finally:
 #        cursor.close() 
 #        conn.close()
 
+
+@app.route('/loggers')
+def loggers_view():
+    global df_summary, df_count, df_raw, df_filter, df_volt 
+    
+    
+    
+    try:
+        #get latest ts
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT max(ts) as tsupdate FROM logger_counter ")
+        ts = cursor.fetchone()
+        
+        
+        df_logger = eval_loggers.evaluate()
+        summary = df_logger.to_dict('r')
+        table = loggers(summary)
+        table.border = True
+        return render_template('summary.html', table=table, tsupdate = ts['tsupdate'], title = "Loggers")#rows.to_html(index=False))
+    except Exception as e:
+        print(e)
+        
 @app.route("/<name>" )
 def show(name):
     global df_summary, df_raw, df_filter, df_volt
@@ -190,7 +217,7 @@ def view_status():
                        "order by tsm_name, node_id, accel_number")
 #        rows = cursor.fetchall()
         
-        rows = qdb.get_db_dataframe(query)
+        rows = db.df_read(query, connection="analysis")
         rows = rows.to_dict('r')
         
         table = status(rows)
@@ -210,7 +237,7 @@ def edit_view(id):
 #        cursor = conn.cursor(pymysql.cursors.DictCursor)
         query = "SELECT * FROM accelerometer_status WHERE stat_id={}".format(id)
 #        row = cursor.fetchone()
-        row = qdb.get_db_dataframe(query)
+        row = db.df_read(query, connection="analysis")
 #        print "###################################################"
 #        print id
 #        print row
@@ -250,7 +277,7 @@ def update_in_use_view():
                      "and node_id = (select node_id FROM accelerometers "
                      "where accel_id = {})".format(id,id))
     #        row = cursor.fetchone()
-            row = qdb.get_db_dataframe(query)
+            row = db.df_read(query, connection="analysis")
             row = row.to_dict('r')
             if row:
                 print ("nagana in_use")
@@ -291,7 +318,8 @@ def update_status():
 #            cursor = conn.cursor()
 #            cursor.execute(sql, data)
 #            conn.commit()
-            qdb.execute_query(sql)
+#            qdb.execute_query(sql)
+            db.write(sql,connection = 'analysis')
             flash('Status updated successfully!')
             return redirect('/')
         else:
@@ -322,7 +350,7 @@ def update_in_use():
         if tsm_id and request.method == 'POST':
             query = ("SELECT * FROM accelerometers "
                      "where tsm_id = '{}' and node_id = '{}'".format(tsm_id,node_id))
-            accel = qdb.get_db_dataframe(query)
+            accel = db.df_read(query, connection="analysis")
             
             for i in accel.accel_number:
                 print (i)
@@ -334,8 +362,9 @@ def update_in_use():
                 update_query = ("UPDATE `accelerometers` "
                                 "SET `in_use`='{}', `ts_updated` = NOW() WHERE `tsm_id`='{}' and "
                                 "`node_id`='{}' and `accel_number` = '{}';".format(in_use, tsm_id, node_id, i))
-                qdb.execute_query(update_query)
                 print (update_query)
+#                qdb.execute_query(update_query)
+                db.write(update_query,connection = 'analysis')
 #            #do not save password as a plain text
 ##            _hashed_password = generate_password_hash(_password)
 #            # save edits
@@ -364,7 +393,8 @@ def delete_status(id):
 #        conn = mysql.connect()
 #        cursor = conn.cursor()
         sql = "DELETE FROM accelerometer_status WHERE stat_id={}".format(id)
-        qdb.execute_query(sql)
+#        qdb.execute_query(sql)
+        db.write(sql,connection = 'analysis')
         flash('User deleted successfully!')
         return redirect('/')
     except Exception as e:
@@ -375,9 +405,9 @@ def delete_status(id):
   
 if __name__ == "__main__":
 #    ip = socket.gethostbyname(socket.gethostname())
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip = s.getsockname()[0]
-    print(ip)
-    socketio.run(app, host= ip, port=5000)
-    app.run(debug=True)
+#    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#    s.connect(("8.8.8.8", 80))
+#    ip = s.getsockname()[0]
+#    print(ip)
+    socketio.run(app, host= "0.0.0.0")
+    app.run(port=5000,debug=True)

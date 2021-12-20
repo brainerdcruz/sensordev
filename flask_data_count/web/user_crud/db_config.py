@@ -7,5 +7,5 @@ mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'senslope'
 app.config['MYSQL_DATABASE_DB'] = 'senslopedb'
-app.config['MYSQL_DATABASE_HOST'] = '192.168.150.77'
+app.config['MYSQL_DATABASE_HOST'] = '127.0.0.1'
 mysql.init_app(app)

@@ -7,6 +7,7 @@ class Results(Table):
     filter_status = Col('Filter Status')
     volt_status = Col('Volt Status')
     sms_msg = Col('SMS Status')
+    decom_status = Col('Decommission')
     show = LinkCol('Show', 'show', url_kwargs=dict(name ='tsm_name'))
     
 class all_data(Table):
@@ -74,3 +75,14 @@ class status(Table):
     remarks = Col('remarks')
     edit = LinkCol('Edit', 'edit_view', url_kwargs=dict(id='stat_id'))
     delete = LinkCol('Delete', 'delete_status', url_kwargs=dict(id='stat_id'))
+	
+	
+class loggers(Table):
+    logger_name = Col('Logger')
+    has_rain = Col('has_rain')
+    logger_type = Col('Logger Type')
+    eval_count = Col('Data Count')
+    eval_rain = Col('Rain Gauge')
+    eval_batt = Col('Batt Status')
+    eval_csq = Col('CSQ Status')
+    eval_rssi = Col('RSSI Status')    

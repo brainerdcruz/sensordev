@@ -22,12 +22,17 @@
 
 	<div id="content">
 		<a href="{{ url_for('.users') }}"><button class="btn"><i class="fa fa-home"></i> Home</button></a>
+		<a href="{{ url_for('.loggers_view') }}"><button class="btn"><i class="fa fa-flag"></i> Loggers</button></a>
 		<a href="{{ url_for('.view_status') }}"><button class="btn"><i class="fa fa-bars"></i> Status</button></a>
 		<a href="{{ url_for('.add_status_view') }}"><button class="btn"><i class="fa fa-plus"></i> Add Status</button></a>
 		<a href="{{ url_for('.update_in_use_view') }}"><button class="btn"><i class="fa fa-toggle-on"></i> Switch accel</button></a>
 		
 		{% if tsupdate %}
-		<h1>Sensor Monitoring System</h1>
+		<h1>SHAMSY</h1> 
+		<h2>(Sensor Health Analysis and Monitoring System)</h2>
+		{% if title %}
+		<h3>{{title}}</h3>
+		{% endif %}
 		<p><a href="{{ url_for('.update_datacounter') }}" onclick = 'loading();'> Update datacounter </a></p>
 		
 		<p>
